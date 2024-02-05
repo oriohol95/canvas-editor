@@ -1,0 +1,13 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 2em;
+  text-align: center;
+}
+
+.body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
