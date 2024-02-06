@@ -27,10 +27,10 @@ export default function Editor () {
   return (
     <section className={styles.wrapper}>
       <aside className={styles.sidePanel}>
-        <div>
+        <div className={styles.topContent}>
           <section className={styles.block}>
             <p className={styles.title}>
-              <b>Shapes</b>
+              Shapes
             </p>
             <div className={styles.shapesContainer}>
               <Button onClick={() => addNewShape(SHAPE_TYPES.RECTANGLE)}>
@@ -44,7 +44,7 @@ export default function Editor () {
           {selectedShape && (
             <section className={styles.block}>
               <p className={styles.title}>
-                <b>Selected Shape</b>
+                Size & Color
               </p>
               <div className={styles.attrsContainer}>
                 <ColorPicker

@@ -6,7 +6,7 @@
   border-radius: 16px;
   outline: none;
   color: var(--color-dark);
-  background: var(--color-light);
+  background: transparent;
   cursor: pointer;
   padding: 8px;
   transition: background 0.2s ease-in-out;
@@ -17,4 +17,5 @@
 
 .disabled {
   opacity: 0.25;
+  pointer-events: none;
 }

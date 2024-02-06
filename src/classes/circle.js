@@ -1,6 +1,7 @@
 import Shape, { SHAPE_TYPES } from './abstract/shape'
 
-const BORDER_THICKNESS = 3
+const HOVER_BORDER_THICKNESS = 3
+const SELECTED_BORDER_THICKNESS = 5
 
 const VALID_ATTRS = [
   'radius',
@@ -16,8 +17,9 @@ export default class Circle extends Shape {
 
   draw (ctx, { isHovered = false, isSelected = false }) {
     if (isSelected || isHovered) {
+      const borderThickness = isSelected ? SELECTED_BORDER_THICKNESS : HOVER_BORDER_THICKNESS
       ctx.beginPath()
-      ctx.arc(this.x, this.y, this.radius + BORDER_THICKNESS, 0, Math.PI * 2, false)
+      ctx.arc(this.x, this.y, this.radius + borderThickness, 0, Math.PI * 2, false)
       ctx.fillStyle = 'rgba(82, 133, 227, 0.5)'
       ctx.fill()
       ctx.closePath()

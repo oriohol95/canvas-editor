@@ -1,8 +1,33 @@
+@font-face {
+  font-family: 'Screencastify';
+  src: url(fonts/Regular.ttf);
+  font-weight: lighter;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Screencastify';
+  src: url(fonts/Medium.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Screencastify';
+  src: url(fonts/SemiBold.ttf);
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Screencastify';
+  src: url(fonts/Bold.ttf);
+  font-weight: bolder;
+  font-style: normal;
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Screencastify';
   line-height: 1.5;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: normal;
 
   color: var(--color-dark);
   background-color: var(--color-background);

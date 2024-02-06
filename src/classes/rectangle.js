@@ -1,6 +1,7 @@
 import Shape, { SHAPE_TYPES } from './abstract/shape'
 
-const BORDER_THICKNESS = 3
+const HOVER_BORDER_THICKNESS = 3
+const SELECTED_BORDER_THICKNESS = 5
 
 const VALID_ATTRS = [
   'width',
@@ -18,8 +19,9 @@ export default class Rectangle extends Shape {
 
   draw (ctx, { isHovered = false, isSelected = false }) {
     if (isSelected || isHovered) {
+      const borderThickness = isSelected ? SELECTED_BORDER_THICKNESS : HOVER_BORDER_THICKNESS
       ctx.fillStyle = 'rgba(82, 133, 227, 0.5)'
-      ctx.fillRect(this.x - (BORDER_THICKNESS), this.y - (BORDER_THICKNESS), this.width + (BORDER_THICKNESS * 2), this.height + (BORDER_THICKNESS * 2))
+      ctx.fillRect(this.x - (borderThickness), this.y - (borderThickness), this.width + (borderThickness * 2), this.height + (borderThickness * 2))
     }
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)

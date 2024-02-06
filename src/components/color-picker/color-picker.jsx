@@ -7,7 +7,7 @@ export default function ColorPicker ({
 }) {
   return (
     <div className={styles.wrapper}>
-      <label>
+      <label className={styles.label}>
         {label}
       </label>
       <input

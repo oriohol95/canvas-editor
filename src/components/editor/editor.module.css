@@ -15,6 +15,11 @@
   padding: 16px;
   gap: 24px;
 }
+.topContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
 .block {
   display: flex;
@@ -39,7 +44,7 @@
 }
 
 .title {
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 12px;
 }
 
