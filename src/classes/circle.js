@@ -1,11 +1,11 @@
-import Shape from './abstract/shape'
+import Shape, { SHAPE_TYPES } from './abstract/shape'
 
 const BORDER_THICKNESS = 3
 
 export default class Circle extends Shape {
   constructor ({ radius = 50, ...attrs }) {
     super(attrs)
-    this.type = 'Circle'
+    this.type = SHAPE_TYPES.CIRCLE
     this.radius = radius
   }
 

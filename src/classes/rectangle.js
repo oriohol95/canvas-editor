@@ -1,11 +1,11 @@
-import Shape from './abstract/shape'
+import Shape, { SHAPE_TYPES } from './abstract/shape'
 
 const BORDER_THICKNESS = 3
 
 export default class Rectangle extends Shape {
   constructor ({ width = 100, height = 100, ...attrs }) {
     super(attrs)
-    this.type = 'Rectangle'
+    this.type = SHAPE_TYPES.RECTANGLE
     this.width = width
     this.height = height
   }
