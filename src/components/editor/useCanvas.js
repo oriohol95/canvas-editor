@@ -1,7 +1,10 @@
 import { useRef, useEffect } from 'react'
 import { shapeFactory, SHAPE_TYPES } from '../../factories'
 
-export const useCanvas = ({ width, height }) => {
+const CANVAS_PADDING_WIDTH = 400
+const CANVAS_PADDING_HEIGHT = 150
+
+export const useCanvas = () => {
   const canvasRef = useRef()
   const contextRef = useRef()
   let shapes = []
@@ -28,14 +31,25 @@ export const useCanvas = ({ width, height }) => {
     canvasRef.current.style.background = 'white'
     contextRef.current = canvasRef.current.getContext('2d')
 
+    const handleResize = () => {
+      contextRef.current.canvas.width = window.innerWidth - CANVAS_PADDING_WIDTH
+      contextRef.current.canvas.height = window.innerHeight - CANVAS_PADDING_HEIGHT
+
+      drawShapes()
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       document.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 
   const drawShapes = () => {
-    contextRef.current.clearRect(0, 0, width, height)
+    contextRef.current.clearRect(0, 0, contextRef.current.canvas.width, contextRef.current.canvas.height)
 
     shapes.forEach((shape, i) => {
       shape.draw(contextRef.current, { isHovered: hoveredIndex === i, isSelected: selectedShapes.has(i) })
@@ -44,8 +58,9 @@ export const useCanvas = ({ width, height }) => {
 
   const addNewShape = (
     type = SHAPE_TYPES.RECTANGLE,
-    shape = { width: 100, height: 100, radius: 50, color: 'lightgray' }
+    shape = { width: 200, height: 200, radius: 100, color: 'lightgray' }
   ) => {
+    const { width, height } = contextRef.current.canvas
     const center = {
       x: type === SHAPE_TYPES.CIRCLE ? width / 2 : (width - shape.width) / 2,
       y: type === SHAPE_TYPES.CIRCLE ? height / 2 : (height - shape.height) / 2
@@ -60,6 +75,9 @@ export const useCanvas = ({ width, height }) => {
       color: shape.color
     })
     shapes.push(newShape)
+
+    selectedShapes.clear()
+    selectedShapes.add(shapes.length - 1)
 
     drawShapes()
   }
