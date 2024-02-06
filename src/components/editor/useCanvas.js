@@ -7,21 +7,21 @@ const CANVAS_PADDING_HEIGHT = 150
 export const useCanvas = () => {
   const canvasRef = useRef()
   const contextRef = useRef()
-  let shapes = []
-  const selectedShapes = new Set()
-  let hoveredIndex = null
-  let isDragging = false
-  let startX = null
-  let startY = null
-  let isShiftPress = false
+  const shapes = useRef([])
+  const selectedShapes = useRef(new Set())
+  const hoveredIndex = useRef(null)
+  const isDragging = useRef(false)
+  const startX = useRef(null)
+  const startY = useRef(null)
+  const isShiftPress = useRef(false)
 
   const onKeyDown = (e) => {
-    if (e.key === 'Shift') isShiftPress = true
+    if (e.key === 'Shift') isShiftPress.current = true
     if (e.key === 'Backspace') deleteSelectedShapes()
   }
 
   const onKeyUp = (e) => {
-    if (e.key === 'Shift') isShiftPress = false
+    if (e.key === 'Shift') isShiftPress.current = false
   }
 
   useEffect(() => {
@@ -51,8 +51,8 @@ export const useCanvas = () => {
   const drawShapes = () => {
     contextRef.current.clearRect(0, 0, contextRef.current.canvas.width, contextRef.current.canvas.height)
 
-    shapes.forEach((shape, i) => {
-      shape.draw(contextRef.current, { isHovered: hoveredIndex === i, isSelected: selectedShapes.has(i) })
+    shapes.current.forEach((shape, i) => {
+      shape.draw(contextRef.current, { isHovered: hoveredIndex.current === i, isSelected: selectedShapes.current.has(i) })
     })
   }
 
@@ -74,18 +74,18 @@ export const useCanvas = () => {
       radius: shape.radius,
       color: shape.color
     })
-    shapes.push(newShape)
+    shapes.current.push(newShape)
 
-    selectedShapes.clear()
-    selectedShapes.add(shapes.length - 1)
+    selectedShapes.current.clear()
+    selectedShapes.current.add(shapes.current.length - 1)
 
     drawShapes()
   }
 
   const deleteSelectedShapes = () => {
-    shapes = shapes.filter((_, i) => !selectedShapes.has(i))
-    selectedShapes.clear()
-    hoveredIndex = null
+    shapes.current = shapes.current.filter((_, i) => !selectedShapes.current.has(i))
+    selectedShapes.current.clear()
+    hoveredIndex.current = null
 
     drawShapes()
   }
@@ -103,35 +103,35 @@ export const useCanvas = () => {
     const { clientX, clientY } = e
     const { offsetX, offsetY } = getCanvasOffset()
 
-    startX = clientX - offsetX
-    startY = clientY - offsetY
+    startX.current = clientX - offsetX
+    startY.current = clientY - offsetY
 
-    shapes.forEach((shape, i) => {
-      if (shape.isMouseOver(startX, startY)) {
-        isDragging = true
-        if (isShiftPress) {
-          if (selectedShapes.has(i)) selectedShapes.delete(i)
-          else selectedShapes.add(i)
-        } else if (selectedShapes.size > 1) {
-          if (!selectedShapes.has(i)) {
-            selectedShapes.clear()
-            selectedShapes.add(i)
+    shapes.current.forEach((shape, i) => {
+      if (shape.isMouseOver(startX.current, startY.current)) {
+        isDragging.current = true
+        if (isShiftPress.current) {
+          if (selectedShapes.current.has(i)) selectedShapes.current.delete(i)
+          else selectedShapes.current.add(i)
+        } else if (selectedShapes.current.size > 1) {
+          if (!selectedShapes.current.has(i)) {
+            selectedShapes.current.clear()
+            selectedShapes.current.add(i)
           }
         } else {
-          selectedShapes.clear()
-          selectedShapes.add(i)
+          selectedShapes.current.clear()
+          selectedShapes.current.add(i)
         }
       }
     })
 
-    if (!isDragging) selectedShapes.clear()
+    if (!isDragging.current) selectedShapes.current.clear()
 
     drawShapes()
   }
 
   const handleMouseUp = (e) => {
     e.preventDefault()
-    isDragging = false
+    isDragging.current = false
   }
 
   const handleMouseMove = (e) => {
@@ -143,30 +143,30 @@ export const useCanvas = () => {
     const currentX = clientX - offsetX
     const currentY = clientY - offsetY
 
-    hoveredIndex = null
-    shapes.forEach((shape, i) => {
+    hoveredIndex.current = null
+    shapes.current.forEach((shape, i) => {
       if (shape.isMouseOver(currentX, currentY)) {
-        hoveredIndex = i
+        hoveredIndex.current = i
       }
     })
 
-    if (isDragging) {
-      const diffX = currentX - startX
-      const diffY = currentY - startY
+    if (isDragging.current) {
+      const diffX = currentX - startX.current
+      const diffY = currentY - startY.current
 
-      selectedShapes.forEach((i) => {
-        const currentShape = shapes[i]
+      selectedShapes.current.forEach((i) => {
+        const currentShape = shapes.current[i]
         currentShape.x += diffX
         currentShape.y += diffY
 
-        hoveredIndex = i
+        hoveredIndex.current = i
       })
     }
 
     drawShapes()
 
-    startX = currentX
-    startY = currentY
+    startX.current = currentX
+    startY.current = currentY
   }
 
   return {
