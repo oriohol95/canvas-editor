@@ -2,6 +2,11 @@ import Shape, { SHAPE_TYPES } from './abstract/shape'
 
 const BORDER_THICKNESS = 3
 
+const VALID_ATTRS = [
+  'radius',
+  'color'
+]
+
 export default class Circle extends Shape {
   constructor ({ radius = 50, ...attrs }) {
     super(attrs)
@@ -30,5 +35,11 @@ export default class Circle extends Shape {
       ((x - this.x) * (x - this.x)) + ((y - this.y) * (y - this.y))
     )
     return distance < this.radius
+  }
+
+  updateAttrs (attrs = {}) {
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (VALID_ATTRS.includes(key)) this[key] = value
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { BsCircleFill, BsFillSquareFill } from 'react-icons/bs'
 import { Button, Slider } from '../../components'
 import { useCanvas } from './useCanvas'
@@ -6,15 +6,13 @@ import styles from './editor.module.css'
 import { SHAPE_TYPES } from '../../classes/abstract/shape'
 
 export default function Editor () {
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
-
   const {
     ref,
     shapes,
     selectedShapes,
     addNewShape,
     deleteSelectedShapes,
+    updateShape,
     ...events
   } = useCanvas()
 
@@ -22,10 +20,6 @@ export default function Editor () {
     if (selectedShapes.length === 1) return shapes[selectedShapes.at(0)]
     return null
   }, [selectedShapes])
-
-  useEffect(() => {
-    console.log(selectedShape)
-  }, [shapes, selectedShapes])
 
   const addNewRectangle = () => {
     addNewShape(SHAPE_TYPES.RECTANGLE)
@@ -64,13 +58,35 @@ export default function Editor () {
             <p className={styles.title}>
               <b>Selected Shape</b>
             </p>
-            <div className={styles.shapesContainer}>
-
-              <Slider
-                label='Width'
-                value={width}
-                onChange={(e) => setWidth(Number(e.target.value))}
-              />
+            <div className={styles.attrsContainer}>
+              {selectedShape.type === SHAPE_TYPES.RECTANGLE && (
+                <>
+                  <Slider
+                    label={`Width: ${selectedShape.width}px`}
+                    value={selectedShape.width}
+                    onChange={(e) => updateShape(selectedShapes.at(0), { width: Number(e.target.value) })}
+                  />
+                  <Slider
+                    label={`Height: ${selectedShape.height}px`}
+                    value={selectedShape.height}
+                    onChange={(e) => updateShape(selectedShapes.at(0), { height: Number(e.target.value) })}
+                  />
+                </>
+              )}
+              {selectedShape.type === SHAPE_TYPES.CIRCLE && (
+                <>
+                  <Slider
+                    label={`Radius: ${selectedShape.radius}px`}
+                    value={selectedShape.radius}
+                    onChange={(e) => updateShape(selectedShapes.at(0), { radius: Number(e.target.value) })}
+                  />
+                </>
+              )}
+              {/* <Slider
+                label='Color'
+                value={selectedShape.radius}
+                onChange={(e) => updateShape(selectedShapes.at(0), { radius: Number(e.target.value) })}
+              /> */}
             </div>
           </section>
         )}

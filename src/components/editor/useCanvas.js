@@ -17,16 +17,16 @@ export const useCanvas = () => {
   const isDragging = useRef(false)
   const isShiftPress = useRef(false)
 
-  const onKeyDown = (e) => {
-    if (e.key === 'Shift') isShiftPress.current = true
-    if (e.key === 'Backspace') deleteSelectedShapes()
-  }
-
-  const onKeyUp = (e) => {
-    if (e.key === 'Shift') isShiftPress.current = false
-  }
-
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Shift') isShiftPress.current = true
+      if (e.key === 'Backspace') deleteSelectedShapes()
+    }
+
+    const handleKeyUp = (e) => {
+      if (e.key === 'Shift') isShiftPress.current = false
+    }
+
     const handleResize = () => {
       contextRef.current.canvas.width = window.innerWidth - CANVAS_PADDING_WIDTH
       contextRef.current.canvas.height = window.innerHeight - CANVAS_PADDING_HEIGHT
@@ -34,8 +34,8 @@ export const useCanvas = () => {
       drawShapes()
     }
 
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
     window.addEventListener('resize', handleResize)
 
     canvasRef.current.style.background = 'white'
@@ -44,8 +44,8 @@ export const useCanvas = () => {
     handleResize()
 
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('resize', handleResize)
     }
   }, [shapes, selectedShapes])
@@ -85,6 +85,15 @@ export const useCanvas = () => {
     setShapes(newShapes)
     setSelectedShapes([])
     hoveredIndex.current = null
+  }
+
+  const updateShape = (index, attrs) => {
+    const newShapes = shapes.map((shape, i) => {
+      if (i !== index) return shape
+      shape.updateAttrs(attrs)
+      return shape
+    })
+    setShapes(newShapes)
   }
 
   const getCanvasOffset = () => {
@@ -175,6 +184,7 @@ export const useCanvas = () => {
     selectedShapes,
     addNewShape,
     deleteSelectedShapes,
+    updateShape,
     onMouseDown: handleMouseDown,
     onMouseUp: handleMouseUp,
     onMouseOut: handleMouseUp,

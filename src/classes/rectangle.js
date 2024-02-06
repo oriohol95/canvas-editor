@@ -2,6 +2,12 @@ import Shape, { SHAPE_TYPES } from './abstract/shape'
 
 const BORDER_THICKNESS = 3
 
+const VALID_ATTRS = [
+  'width',
+  'height',
+  'color'
+]
+
 export default class Rectangle extends Shape {
   constructor ({ width = 100, height = 100, ...attrs }) {
     super(attrs)
@@ -22,6 +28,12 @@ export default class Rectangle extends Shape {
   isMouseOver (x, y) {
     const { left, right, top, bottom } = this.#getBoundaries()
     return x > left && x < right && y > top && y < bottom
+  }
+
+  updateAttrs (attrs = {}) {
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (VALID_ATTRS.includes(key)) this[key] = value
+    })
   }
 
   #getBoundaries () {
