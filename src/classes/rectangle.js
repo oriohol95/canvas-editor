@@ -5,6 +5,7 @@ const BORDER_THICKNESS = 3
 export default class Rectangle extends Shape {
   constructor ({ width = 100, height = 100, ...attrs }) {
     super(attrs)
+    this.type = 'Rectangle'
     this.width = width
     this.height = height
   }

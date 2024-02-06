@@ -1,14 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BsCircleFill, BsFillSquareFill } from 'react-icons/bs'
 import { Button, Slider } from '../../components'
 import { useCanvas } from './useCanvas'
 import styles from './editor.module.css'
-import { SHAPE_TYPES } from '../../factories'
+import { SHAPE_TYPES } from '../../classes/abstract/shape'
 
 export default function Editor () {
-  const { ref, addNewShape, deleteSelectedShapes, ...events } = useCanvas()
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
+
+  const {
+    ref,
+    shapes,
+    selectedShapes,
+    addNewShape,
+    deleteSelectedShapes,
+    ...events
+  } = useCanvas()
+
+  useEffect(() => {
+    console.log('newShapes', shapes)
+    console.log('newSelectedShapes', selectedShapes)
+    console.log(shapes[0])
+  }, [shapes, selectedShapes])
 
   const addNewRectangle = () => {
     addNewShape(SHAPE_TYPES.RECTANGLE)

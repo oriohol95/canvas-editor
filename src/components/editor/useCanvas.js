@@ -1,18 +1,20 @@
-import { useRef, useEffect } from 'react'
-import { shapeFactory, SHAPE_TYPES } from '../../factories'
+import { useRef, useState, useEffect } from 'react'
+import { shapeFactory } from '../../factories'
+import { SHAPE_TYPES } from '../../classes/abstract/shape'
 
 const CANVAS_PADDING_WIDTH = 400
 const CANVAS_PADDING_HEIGHT = 150
 
 export const useCanvas = () => {
+  const [shapes, setShapes] = useState([])
+  const [selectedShapes, setSelectedShapes] = useState([])
+
   const canvasRef = useRef()
   const contextRef = useRef()
-  const shapes = useRef([])
-  const selectedShapes = useRef(new Set())
   const hoveredIndex = useRef(null)
-  const isDragging = useRef(false)
   const startX = useRef(null)
   const startY = useRef(null)
+  const isDragging = useRef(false)
   const isShiftPress = useRef(false)
 
   const onKeyDown = (e) => {
@@ -48,11 +50,15 @@ export const useCanvas = () => {
     }
   }, [])
 
+  useEffect(() => {
+    drawShapes()
+  }, [shapes, selectedShapes])
+
   const drawShapes = () => {
     contextRef.current.clearRect(0, 0, contextRef.current.canvas.width, contextRef.current.canvas.height)
 
-    shapes.current.forEach((shape, i) => {
-      shape.draw(contextRef.current, { isHovered: hoveredIndex.current === i, isSelected: selectedShapes.current.has(i) })
+    shapes.forEach((shape, i) => {
+      shape.draw(contextRef.current, { isHovered: hoveredIndex.current === i, isSelected: selectedShapes.includes(i) })
     })
   }
 
@@ -74,20 +80,15 @@ export const useCanvas = () => {
       radius: shape.radius,
       color: shape.color
     })
-    shapes.current.push(newShape)
-
-    selectedShapes.current.clear()
-    selectedShapes.current.add(shapes.current.length - 1)
-
-    drawShapes()
+    setShapes([...shapes, newShape])
+    setSelectedShapes([shapes.length])
   }
 
   const deleteSelectedShapes = () => {
-    shapes.current = shapes.current.filter((_, i) => !selectedShapes.current.has(i))
-    selectedShapes.current.clear()
+    const newShapes = shapes.filter((_, i) => !selectedShapes.includes(i))
+    setShapes(newShapes)
+    setSelectedShapes([])
     hoveredIndex.current = null
-
-    drawShapes()
   }
 
   const getCanvasOffset = () => {
@@ -106,27 +107,30 @@ export const useCanvas = () => {
     startX.current = clientX - offsetX
     startY.current = clientY - offsetY
 
-    shapes.current.forEach((shape, i) => {
+    shapes.forEach((shape, i) => {
       if (shape.isMouseOver(startX.current, startY.current)) {
         isDragging.current = true
         if (isShiftPress.current) {
-          if (selectedShapes.current.has(i)) selectedShapes.current.delete(i)
-          else selectedShapes.current.add(i)
-        } else if (selectedShapes.current.size > 1) {
-          if (!selectedShapes.current.has(i)) {
-            selectedShapes.current.clear()
-            selectedShapes.current.add(i)
+          if (selectedShapes.includes(i)) {
+            const newSelectedShapes = selectedShapes.filter((index) => index !== i)
+            setSelectedShapes(newSelectedShapes)
+          } else {
+            setSelectedShapes([
+              ...selectedShapes,
+              i
+            ])
+          }
+        } else if (selectedShapes.length > 1) {
+          if (!selectedShapes.includes(i)) {
+            setSelectedShapes([i])
           }
         } else {
-          selectedShapes.current.clear()
-          selectedShapes.current.add(i)
+          setSelectedShapes([i])
         }
       }
     })
 
-    if (!isDragging.current) selectedShapes.current.clear()
-
-    drawShapes()
+    if (!isDragging.current) setSelectedShapes([])
   }
 
   const handleMouseUp = (e) => {
@@ -144,7 +148,7 @@ export const useCanvas = () => {
     const currentY = clientY - offsetY
 
     hoveredIndex.current = null
-    shapes.current.forEach((shape, i) => {
+    shapes.forEach((shape, i) => {
       if (shape.isMouseOver(currentX, currentY)) {
         hoveredIndex.current = i
       }
@@ -154,8 +158,8 @@ export const useCanvas = () => {
       const diffX = currentX - startX.current
       const diffY = currentY - startY.current
 
-      selectedShapes.current.forEach((i) => {
-        const currentShape = shapes.current[i]
+      selectedShapes.forEach((i) => {
+        const currentShape = shapes[i]
         currentShape.x += diffX
         currentShape.y += diffY
 
@@ -171,6 +175,8 @@ export const useCanvas = () => {
 
   return {
     ref: canvasRef,
+    shapes,
+    selectedShapes,
     addNewShape,
     deleteSelectedShapes,
     onMouseDown: handleMouseDown,

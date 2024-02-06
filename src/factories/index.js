@@ -8,8 +8,3 @@ export const shapeFactory = {
     return new ShapeType(attrs)
   }
 }
-
-export const SHAPE_TYPES = {
-  RECTANGLE: 'Rectangle',
-  CIRCLE: 'Circle'
-}

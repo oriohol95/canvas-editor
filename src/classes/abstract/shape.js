@@ -9,3 +9,8 @@ export default class Shape {
     this.color = color
   }
 }
+
+export const SHAPE_TYPES = {
+  RECTANGLE: 'Rectangle',
+  CIRCLE: 'Circle'
+}

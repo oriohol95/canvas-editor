@@ -5,6 +5,7 @@ const BORDER_THICKNESS = 3
 export default class Circle extends Shape {
   constructor ({ radius = 50, ...attrs }) {
     super(attrs)
+    this.type = 'Circle'
     this.radius = radius
   }
 
