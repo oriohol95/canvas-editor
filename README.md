@@ -1,8 +1,30 @@
-# React + Vite
+# Canvas Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a technical exercise for Screencastify.
 
-Currently, two official plugins are available:
+The object of this project is to create a very limited "toy" graphics editing program.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+There are three main sections of this application:
+
+1. A list of buttons to add shapes
+2. A canvas to show shapes / drag to reposition shapes
+3. A property editor for selected shapes
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+pnpm dev
+```
+
+To build the project run:
+```bash
+pnpm build
+```
+
+## Deployed on Netlify
+
+The project has been deployed using Netlify service
+
+[Canvas Editor Netlify](https://canvas-editor-oriol-colomer.netlify.app/)
