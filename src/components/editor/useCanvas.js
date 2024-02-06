@@ -27,12 +27,6 @@ export const useCanvas = () => {
   }
 
   useEffect(() => {
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
-
-    canvasRef.current.style.background = 'white'
-    contextRef.current = canvasRef.current.getContext('2d')
-
     const handleResize = () => {
       contextRef.current.canvas.width = window.innerWidth - CANVAS_PADDING_WIDTH
       contextRef.current.canvas.height = window.innerHeight - CANVAS_PADDING_HEIGHT
@@ -40,18 +34,20 @@ export const useCanvas = () => {
       drawShapes()
     }
 
-    handleResize()
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
     window.addEventListener('resize', handleResize)
+
+    canvasRef.current.style.background = 'white'
+    contextRef.current = canvasRef.current.getContext('2d')
+
+    handleResize()
 
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       document.removeEventListener('keyup', onKeyUp)
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
-
-  useEffect(() => {
-    drawShapes()
   }, [shapes, selectedShapes])
 
   const drawShapes = () => {

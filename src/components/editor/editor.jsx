@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { BsCircleFill, BsFillSquareFill } from 'react-icons/bs'
 import { Button, Slider } from '../../components'
 import { useCanvas } from './useCanvas'
@@ -18,10 +18,13 @@ export default function Editor () {
     ...events
   } = useCanvas()
 
+  const selectedShape = useMemo(() => {
+    if (selectedShapes.length === 1) return shapes[selectedShapes.at(0)]
+    return null
+  }, [selectedShapes])
+
   useEffect(() => {
-    console.log('newShapes', shapes)
-    console.log('newSelectedShapes', selectedShapes)
-    console.log(shapes[0])
+    console.log(selectedShape)
   }, [shapes, selectedShapes])
 
   const addNewRectangle = () => {
@@ -56,18 +59,21 @@ export default function Editor () {
             </Button>
           </div>
         </section>
-        <section className={styles.block}>
-          <p className={styles.title}>
-            <b>Selected Shape</b>
-          </p>
-          <div className={styles.shapesContainer}>
-            <Slider
-              label='Width'
-              value={width}
-              onChange={(e) => setWidth(Number(e.target.value))}
-            />
-          </div>
-        </section>
+        {selectedShape && (
+          <section className={styles.block}>
+            <p className={styles.title}>
+              <b>Selected Shape</b>
+            </p>
+            <div className={styles.shapesContainer}>
+
+              <Slider
+                label='Width'
+                value={width}
+                onChange={(e) => setWidth(Number(e.target.value))}
+              />
+            </div>
+          </section>
+        )}
       </aside>
       <div className={styles.container}>
         <canvas
