@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
 import { BsCircleFill, BsFillSquareFill } from 'react-icons/bs'
-import { Button, Slider } from '../../components'
+import { Button, ColorPicker, Slider } from '../../components'
 import { useCanvas } from './useCanvas'
 import styles from './editor.module.css'
 import { SHAPE_TYPES } from '../../classes/abstract/shape'
+
+const EDITABLE_ATTRS = ['width', 'height', 'radius']
 
 export default function Editor () {
   const {
@@ -42,14 +44,14 @@ export default function Editor () {
                 addNewRectangle()
               }}
             >
-              <BsFillSquareFill size={80} color='lightgray' />
+              <BsFillSquareFill size={80} color='#d3d3d3' />
             </Button>
             <Button
               onClick={() => {
                 addNewCircle()
               }}
             >
-              <BsCircleFill size={80} color='lightgray' />
+              <BsCircleFill size={80} color='#d3d3d3' />
             </Button>
           </div>
         </section>
@@ -59,34 +61,24 @@ export default function Editor () {
               <b>Selected Shape</b>
             </p>
             <div className={styles.attrsContainer}>
-              {selectedShape.type === SHAPE_TYPES.RECTANGLE && (
-                <>
-                  <Slider
-                    label={`Width: ${selectedShape.width}px`}
-                    value={selectedShape.width}
-                    onChange={(e) => updateShape(selectedShapes.at(0), { width: Number(e.target.value) })}
-                  />
-                  <Slider
-                    label={`Height: ${selectedShape.height}px`}
-                    value={selectedShape.height}
-                    onChange={(e) => updateShape(selectedShapes.at(0), { height: Number(e.target.value) })}
-                  />
-                </>
-              )}
-              {selectedShape.type === SHAPE_TYPES.CIRCLE && (
-                <>
-                  <Slider
-                    label={`Radius: ${selectedShape.radius}px`}
-                    value={selectedShape.radius}
-                    onChange={(e) => updateShape(selectedShapes.at(0), { radius: Number(e.target.value) })}
-                  />
-                </>
-              )}
-              {/* <Slider
-                label='Color'
-                value={selectedShape.radius}
-                onChange={(e) => updateShape(selectedShapes.at(0), { radius: Number(e.target.value) })}
-              /> */}
+              <ColorPicker
+                label={`Color: ${selectedShape.color}`}
+                color={selectedShape.color}
+                onChange={(e) => updateShape(selectedShapes.at(0), { color: e.target.value })}
+              />
+              {
+                Object.entries(selectedShape).map(([key, value], i) => {
+                  if (!EDITABLE_ATTRS.includes(key)) return null
+                  return (
+                    <Slider
+                      key={i}
+                      label={`${key}: ${value}px`}
+                      value={value}
+                      onChange={(e) => updateShape(selectedShapes.at(0), { [key]: Number(e.target.value) })}
+                    />
+                  )
+                })
+              }
             </div>
           </section>
         )}

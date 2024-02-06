@@ -1,8 +1,8 @@
 export default class Shape {
   constructor ({
-    x = 10,
-    y = 10,
-    color = 'lightgray'
+    x = 0,
+    y = 0,
+    color = '#d3d3d3'
   }) {
     this.x = x
     this.y = y

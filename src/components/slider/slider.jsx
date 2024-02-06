@@ -10,7 +10,7 @@ export default function Slider ({
 }) {
   return (
     <div className={styles.wrapper}>
-      <label>
+      <label className={styles.label}>
         {label}
       </label>
       <input

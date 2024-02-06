@@ -60,7 +60,7 @@ export const useCanvas = () => {
 
   const addNewShape = (
     type = SHAPE_TYPES.RECTANGLE,
-    shape = { width: 200, height: 200, radius: 100, color: 'lightgray' }
+    shape = { width: 200, height: 200, radius: 100, color: '#d3d3d3' }
   ) => {
     const { width, height } = contextRef.current.canvas
     const center = {
