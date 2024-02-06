@@ -87,6 +87,12 @@ export const useCanvas = () => {
     hoveredIndex.current = null
   }
 
+  const resetCanvas = () => {
+    setShapes([])
+    setSelectedShapes([])
+    hoveredIndex.current = null
+  }
+
   const updateShape = (index, attrs) => {
     const newShapes = shapes.map((shape, i) => {
       if (i !== index) return shape
@@ -185,6 +191,7 @@ export const useCanvas = () => {
     addNewShape,
     deleteSelectedShapes,
     updateShape,
+    resetCanvas,
     onMouseDown: handleMouseDown,
     onMouseUp: handleMouseUp,
     onMouseOut: handleMouseUp,

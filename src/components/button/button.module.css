@@ -14,3 +14,7 @@
 .button:hover {
   background: var(--color-gray);
 }
+
+.disabled {
+  opacity: 0.25;
+}
